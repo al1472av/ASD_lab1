@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using SafeReader;
 
 namespace ASD_lab1
 {
     internal class Program
     {
-        private static ITaskSolver[] tasks = {new Task1(), new Task2(), new Task3()};
+        private static readonly ITaskSolver[] Tasks = {new Task0(), new Task1(), new Task2(), new Task3()};
 
         public static void Main(string[] args)
         {
@@ -15,35 +16,72 @@ namespace ASD_lab1
 
         private static void Menu()
         {
+            Console.Clear();
             Console.WriteLine("1\n2\n3\nExit 0\n");
+                
+            Extentions.SafeRunning(Menu, $"Index out of bound, should be between 0 and {Tasks.Length}");
 
-            do
+            void Menu()
             {
                 int task = ConsoleReader.ReadInt();
-                if (task == 0) Environment.Exit(0);
-                if (task > 0 && task < tasks.Length)
-                {
-                    tasks[task].SolveTask();
-                    break;
-                }
-
-                Console.WriteLine("Incorrect number");
-            } while (true);
+                Tasks[task].SolveTask();
+            }
         }
     }
-
     interface ITaskSolver
     {
         void SolveTask();
     }
 
-    public class Task1 : ITaskSolver
+    public class Task0 : ITaskSolver
     {
         public void SolveTask()
         {
+            Environment.Exit(0);
         }
     }
 
+    public class Task1 : ITaskSolver
+    {
+        private enum Water
+        {
+            River,
+            Lake
+        }
+        
+        public void SolveTask()
+        {
+            Console.Clear();
+            Water water = Water.Lake;
+            Console.WriteLine("1 - River\n2 - Lake");
+            Extentions.SafeRunning(() => water = (Water) (ConsoleReader.ReadInt() - 1), "Incorrect value, must be integer between 1 and 2");
+            Console.WriteLine("Ship Velocity");
+            double velocity = ConsoleReader.ReadDouble();
+            double riverSpeed = 0;
+            
+            if (water == Water.River)
+            {
+                Extentions.SafeRunning(() => GetRiverSpeed(velocity),"River speed must be less than ship speed");
+
+                void GetRiverSpeed(double v)
+                {
+                    Console.WriteLine("River Speed");
+                    riverSpeed = ConsoleReader.ReadDouble();
+                    if(riverSpeed > v)
+                        throw new Exception();
+                }
+            }
+
+            Console.WriteLine("Time");
+            double time = ConsoleReader.ReadDouble();
+
+            Console.WriteLine($"S = {(velocity - riverSpeed) * time}");
+            
+            Console.ReadKey();
+        }
+        
+    }
+    
     public class Task2 : ITaskSolver
     {
         public void SolveTask()
@@ -62,6 +100,7 @@ namespace ASD_lab1
     {
         public void SolveTask()
         {
+            Console.Clear();
             Point<int> firstPos = GetIntPoint();
             Point<int> secondPos = GetIntPoint();
 
