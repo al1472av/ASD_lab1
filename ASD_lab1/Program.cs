@@ -101,7 +101,9 @@ namespace ASD_lab1
         public void SolveTask()
         {
             Console.Clear();
+            Console.WriteLine("First Cell");
             Point<int> firstPos = GetIntPoint();
+            Console.WriteLine("Second Cell");
             Point<int> secondPos = GetIntPoint();
 
             bool onDiagonal = Math.Abs(secondPos.x - firstPos.x) == Math.Abs(secondPos.y - firstPos.y);
@@ -113,10 +115,10 @@ namespace ASD_lab1
 
             Point<int> GetIntPoint()
             {
-                Console.WriteLine("Input first cell X (between 1-8)");
-                int x = ConsoleReader.ReadInt();
-                Console.WriteLine("Input first cell Y (between 1-8)");
-                int y = ConsoleReader.ReadInt();
+                Console.WriteLine("Input X (between 1-8)");
+                int x = ConsoleReader.ReadInt(1,8,"Out of bounds");
+                Console.WriteLine("Input Y (between 1-8)");
+                int y = ConsoleReader.ReadInt(1, 8, "Out of bounds");
 
                 return new Point<int>(x, y);
             }
